@@ -1,0 +1,69 @@
+[
+  {
+    "date": "2026-06-28",
+    "tool": "Antigravity (Google DeepMind)",
+    "scope": "Binary outcome matching engine assignment",
+    "summary": "AI assistance was used to architect and implement a C++ matching engine with flat price ladder, SPSC queue, and OS-level tuning considerations.",
+    "session_context": {
+      "initial_user_goals": [
+        "Achieve best precision on API down to nanosecond per order",
+        "Change: C++ is appropriate for HFT-style engine",
+        "Model real-world exchange constraints beyond REST latency and achive O(1) on every operation",
+        "Apply data structures (queues, hash maps, flat arrays)",
+        "Introduce OS-level tuning (CPU pinning, mlockall)",
+        "Estimate system throughput and latency realistically"
+      ]
+    },
+    "architecture_decisions": [
+      {
+        "decision": "C++20 with Crow REST framework",
+        "rationale": "High-performance systems programming with minimal abstraction overhead"
+      },
+      {
+        "decision": "Flat O(1) price ladder (bids_[100], asks_[100])",
+        "rationale": "Binary price range enables direct indexing and eliminates tree structures"
+      },
+      {
+        "decision": "Per-price FIFO queue",
+        "rationale": "Maintains strict price-time priority at each level"
+      },
+      {
+        "decision": "SPSC lock-free queue",
+        "rationale": "Removes mutex contention between REST layer and matching engine"
+      }
+    ],
+    "notes": "REST layer is explicitly a demo interface; core matching engine is the performance-critical component."
+  },
+  {
+    "date": "2026-06-29",
+    "tool": "Codex",
+    "scope": "Binary outcome matching engine assignment",
+    "summary": "AI assistance was used to review and improve a C++ toy binary outcome matching-engine REST API. The work focused on preserving the original assignment scope while improving correctness, edge-case coverage, tests, emulator logging, documentation, and repo hygiene.",
+    "prior_ai_context": {
+      "source": "User-provided pasted transcript from a previous AI session",
+      "summary": "The earlier AI discussion proposed a C++ fixed-ladder matching engine, described REST vs core latency separation, and later refined correctness, tests, and safety framing."
+    },
+    "human_direction": [
+      "Improve correctness and edge-case handling",
+      "Add better tests and emulator output",
+      "Keep REST on port 8080 only"
+    ],
+    "ai_assisted_changes": [
+      "Structured command results added",
+      "Self-trade prevention made atomic",
+      "Order states introduced (OPEN, PARTIAL, FILLED, CANCELLED)",
+      "Assertion-based test suite added",
+      "Python emulator mode added",
+      "README and test documentation improved",x
+      "Mutex added for REST serialization"
+    ],
+    "verification": [
+      "cmake --build build",
+      "./build/matching_engine",
+      "python3 test_suite.py",
+      "python3 test_suite.py --demo",
+      "python3 test_suite.py --demo --jsonl"
+    ],
+    "notes": "Project remains a toy in-memory REST matching engine; no external persistence, accounts, or exchange connectivity."
+  }
+]
